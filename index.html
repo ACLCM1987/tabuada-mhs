@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1D4ED8">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Tabuada MHS">
+<title>Matheus Home School · Tabuada</title>
+
+<!-- Manifest embutido via data URI -->
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Matheus+Home+School+%C2%B7+Tabuada%22%2C%22short_name%22%3A%22Tabuada+MHS%22%2C%22start_url%22%3A%22.%2Findex.html%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23EFF5FF%22%2C%22theme_color%22%3A%22%231D4ED8%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg+xmlns%3D%2527http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%2527+width%3D%2527192%2527+height%3D%2527192%2527%253E%253Crect+width%3D%2527192%2527+height%3D%2527192%2527+rx%3D%252740%2527+fill%3D%2527%25231D4ED8%2527%2F%253E%253Ctext+x%3D%252796%2527+y%3D%2527128%2527+text-anchor%3D%2527middle%2527+font-size%3D%2527110%2527%253E%25C3%2597%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+
+<!-- Ícone Apple Touch embutido em SVG inline -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><rect width='180' height='180' rx='36' fill='%231D4ED8'/><text x='90' y='130' text-anchor='middle' font-size='110' fill='white'>✕</text></svg>">
+
+<style>
+  :root {
+    --bg: #EFF5FF;
+    --card: #FFFFFF;
+    --brand: #1D4ED8;
+    --brandDark: #173FA6;
+    --sky: #5AB2FF;
+    --ink: #102A52;
+    --inkSoft: #3C5A8A;
+    --good: #16A06B;
+    --goodSoft: #E3F7EF;
+    --star: #FFC23C;
+    --warn: #FF8A5B;
+    --warnSoft: #FFEDE4;
+    --font: ui-rounded, 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Quicksand, 'Segoe UI', system-ui, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  #root {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 16px 28px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  /* ---------- animations ---------- */
+  @keyframes mhs-pop {
+    0%   { transform: scale(.6); opacity: 0; }
+    60%  { transform: scale(1.12); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes mhs-shake {
+    0%,100% { transform: translateX(0); }
+    20%     { transform: translateX(-9px); }
+    40%     { transform: translateX(9px); }
+    60%     { transform: translateX(-6px); }
+    80%     { transform: translateX(6px); }
+  }
+  @keyframes mhs-rise {
+    0%   { transform: translateY(8px); opacity: 0; }
+    100% { transform: translateY(0);   opacity: 1; }
+  }
+  @keyframes confetti-fall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  .anim-pop   { animation: mhs-pop   .35s ease; }
+  .anim-shake { animation: mhs-shake .4s  ease; }
+  .anim-rise  { animation: mhs-rise  .35s ease; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .anim-pop, .anim-shake, .anim-rise { animation: none !important; }
+    .confetti-piece { animation: none !important; display: none; }
+  }
+
+  /* ---------- header ---------- */
+  #header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 4px 18px;
+    flex-shrink: 0;
+  }
+  #logo-box {
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    background: var(--brand);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 0 var(--brandDark);
+    flex-shrink: 0;
+  }
+  #logo-text { line-height: 1; }
+  #logo-text .name  { font-size: 18px; font-weight: 800; color: var(--brand); letter-spacing: .3px; }
+  #logo-text .sub   { font-size: 11px; font-weight: 700; color: var(--inkSoft); letter-spacing: 2px; }
+  #btn-parent {
+    margin-left: auto;
+    border: none; background: transparent;
+    color: var(--inkSoft); font-size: 13px; font-weight: 700;
+    font-family: var(--font);
+    cursor: pointer; padding: 8px; border-radius: 10px;
+    touch-action: manipulation;
+  }
+  #btn-parent:hover { background: rgba(60,90,138,.08); }
+
+  /* ---------- screens ---------- */
+  .screen { flex: 1; display: flex; flex-direction: column; }
+  .screen.hidden { display: none; }
+
+  /* ---------- welcome ---------- */
+  #screen-welcome {
+    justify-content: center;
+    text-align: center;
+    padding-bottom: 24px;
+  }
+  .welcome-emoji { font-size: 56px; line-height: 1; margin-bottom: 8px; }
+  .welcome-title { font-size: 30px; font-weight: 800; margin: 8px 0 4px; }
+  .welcome-sub   { color: var(--inkSoft); font-size: 17px; margin: 0 0 22px; }
+  #stats-card {
+    background: var(--card);
+    border-radius: 22px;
+    padding: 18px 16px;
+    box-shadow: 0 6px 20px rgba(29,78,216,.10);
+    margin-bottom: 26px;
+    display: flex;
+    justify-content: space-around;
+  }
+  .stat-divider { width: 1px; background: #E3ECFB; }
+  .stat-item    { flex: 1; padding: 0 6px; }
+  .stat-big     { font-size: 22px; font-weight: 800; color: var(--brand); }
+  .stat-label   { font-size: 13px; color: var(--inkSoft); font-weight: 600; margin-top: 3px; }
+  .stat-label.small { font-size: 12px; }
+  #btn-start {
+    border: none;
+    background: var(--brand); color: #fff;
+    font-size: 24px; font-weight: 800; font-family: var(--font);
+    padding: 20px; border-radius: 22px;
+    cursor: pointer;
+    box-shadow: 0 6px 0 var(--brandDark);
+    touch-action: manipulation;
+    transition: transform .06s;
+  }
+  #btn-start:active { transform: scale(.97); }
+  .welcome-hint { color: var(--inkSoft); font-size: 13px; margin-top: 16px; }
+
+  /* ---------- play ---------- */
+  #screen-play { gap: 0; }
+
+  #progress-bar-wrap { margin-bottom: 14px; flex-shrink: 0; }
+  #progress-label {
+    display: flex; justify-content: space-between;
+    font-size: 13px; font-weight: 700; color: var(--inkSoft);
+    margin-bottom: 6px;
+  }
+  #progress-track {
+    height: 12px; background: #DCE7FB; border-radius: 999px; overflow: hidden;
+  }
+  #progress-fill {
+    height: 100%; background: var(--sky); border-radius: 999px;
+    transition: width .3s ease;
+  }
+
+  #problem-area {
+    flex: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 18px;
+  }
+  #problem-expr { font-size: 52px; font-weight: 800; letter-spacing: 1px; }
+  #problem-expr .mult { color: var(--sky); }
+
+  #answer-bubble {
+    min-width: 150px; text-align: center;
+    font-size: 40px; font-weight: 800;
+    border: 3px solid #DCE7FB;
+    border-radius: 20px; padding: 14px 26px;
+    background: var(--card); color: var(--ink);
+    transition: background .15s, border-color .15s, color .15s;
+  }
+  #answer-bubble.good  { background: var(--goodSoft); border-color: var(--good); color: var(--good); }
+  #answer-bubble.bad   { background: var(--warnSoft); border-color: var(--warn); color: var(--warn); }
+  #answer-bubble.show  { background: var(--warnSoft); border-color: var(--warn); color: var(--warn); }
+
+  #feedback-text {
+    height: 24px; font-size: 17px; font-weight: 700;
+    color: var(--good);
+  }
+
+  /* ---------- keypad ---------- */
+  #keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+  .key {
+    border: none; border-radius: 16px;
+    font-family: var(--font); font-size: 26px; font-weight: 800;
+    padding: 16px 0; cursor: pointer;
+    touch-action: manipulation;
+    transition: transform .06s, opacity .1s;
+  }
+  .key:active { transform: scale(.94); }
+  .key:disabled { opacity: .55; cursor: default; }
+  .key.num    { background: #fff; color: var(--ink); box-shadow: 0 3px 0 #C9D8F2; }
+  .key.back   { background: #E7EEFB; color: var(--inkSoft); box-shadow: 0 3px 0 #C9D8F2; }
+  .key.ok     { background: var(--good); color: #fff; box-shadow: 0 3px 0 #0E7C52; }
+  .key.ok.dim { background: #BFE6D5; }
+
+  /* ---------- done ---------- */
+  #screen-done {
+    justify-content: center;
+    text-align: center;
+    padding-bottom: 24px;
+  }
+  .done-emoji  { font-size: 64px; line-height: 1; margin-bottom: 6px; }
+  .done-title  { font-size: 28px; font-weight: 800; margin: 6px 0; }
+  .done-score  { font-size: 20px; color: var(--inkSoft); margin: 0 0 10px; }
+  .done-score b { color: var(--brand); }
+  .done-stars  { font-size: 30px; margin: 4px 0 18px; }
+  .level-badge {
+    font-weight: 800; border-radius: 16px;
+    padding: 12px 14px; margin-bottom: 18px;
+  }
+  .level-badge.up   { background: var(--goodSoft); color: var(--good); }
+  .level-badge.down { background: #EEF3FF; color: var(--inkSoft); }
+  #btn-again {
+    border: none; background: var(--brand); color: #fff;
+    font-size: 22px; font-weight: 800; font-family: var(--font);
+    padding: 18px; border-radius: 20px; cursor: pointer;
+    box-shadow: 0 6px 0 var(--brandDark); margin-bottom: 12px;
+    touch-action: manipulation;
+  }
+  #btn-again:active { transform: scale(.97); }
+  #btn-home {
+    border: none; background: transparent; color: var(--inkSoft);
+    font-size: 16px; font-weight: 700; font-family: var(--font);
+    padding: 10px; cursor: pointer; touch-action: manipulation;
+  }
+
+  /* ---------- parent ---------- */
+  #screen-parent { padding-bottom: 24px; }
+
+  #parent-gate {
+    flex: 1; display: flex; flex-direction: column;
+    justify-content: center; text-align: center; padding-bottom: 24px;
+  }
+  #parent-gate h2 { font-size: 22px; font-weight: 800; margin-bottom: 10px; }
+  #parent-gate p  { color: var(--inkSoft); margin-bottom: 16px; }
+  #gate-input {
+    font-size: 22px; font-family: var(--font); text-align: center;
+    padding: 14px; border-radius: 14px; border: 2px solid #DCE7FB;
+    max-width: 200px; width: 100%; margin: 0 auto 14px;
+    outline: none; display: block;
+    color: var(--ink);
+  }
+  #gate-input:focus { border-color: var(--brand); }
+  #gate-input.err   { border-color: var(--warn); }
+  .gate-err { color: var(--warn); margin-top: -6px; margin-bottom: 12px; font-size: 14px; }
+  .gate-actions { display: flex; gap: 10px; justify-content: center; }
+
+  #parent-dash { flex: 1; }
+  #parent-dash h2 { font-size: 22px; font-weight: 800; margin-bottom: 14px; }
+
+  .tiles {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; margin-bottom: 16px;
+  }
+  .tile {
+    background: var(--card); border-radius: 16px;
+    padding: 14px; box-shadow: 0 4px 14px rgba(29,78,216,.07);
+  }
+  .tile-label { font-size: 12px; color: var(--inkSoft); font-weight: 700; }
+  .tile-value { font-size: 22px; font-weight: 800; color: var(--brand); margin: 2px 0; }
+  .tile-sub   { font-size: 11px; color: var(--inkSoft); }
+
+  .section {
+    background: var(--card); border-radius: 18px;
+    padding: 16px; margin-bottom: 14px;
+    box-shadow: 0 4px 14px rgba(29,78,216,.06);
+  }
+  .section-title { font-size: 14px; font-weight: 800; color: var(--ink); margin-bottom: 10px; }
+
+  #chart {
+    display: flex; align-items: flex-end; gap: 8px; height: 90px;
+  }
+  .chart-col { flex: 1; text-align: center; }
+  .chart-bar-wrap { height: 64px; display: flex; align-items: flex-end; }
+  .chart-bar { width: 100%; min-height: 4px; border-radius: 6px; }
+  .chart-num { font-size: 11px; color: var(--inkSoft); margin-top: 4px; }
+
+  .review-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .review-chip {
+    background: var(--warnSoft); color: var(--warn);
+    font-weight: 800; border-radius: 10px;
+    padding: 6px 12px; font-size: 15px;
+  }
+  .review-chip small { font-size: 12px; opacity: .8; }
+
+  .level-controls {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .level-controls .lv-label {
+    font-weight: 800; font-size: 18px; min-width: 70px; text-align: center;
+  }
+  .level-hint { font-size: 13px; color: var(--inkSoft); margin-top: 8px; }
+
+  .parent-actions { display: flex; gap: 10px; margin-top: 18px; }
+
+  /* ---------- shared buttons ---------- */
+  .btn {
+    border: none; font-family: var(--font); font-weight: 800;
+    padding: 12px 22px; border-radius: 14px; cursor: pointer;
+    font-size: 16px; touch-action: manipulation;
+    box-shadow: 0 4px 0 rgba(0,0,0,.12);
+  }
+  .btn:active { transform: scale(.97); }
+  .btn.primary { background: var(--brand); color: #fff; }
+  .btn.soft    { background: #9FB3D6; color: #fff; }
+  .btn.square  { padding: 8px 18px; font-size: 24px; }
+  .btn.danger  {
+    background: transparent; color: var(--warn);
+    box-shadow: none; border: 2px solid var(--warn);
+  }
+  .btn.full    { flex: 1; }
+
+  /* ---------- confetti ---------- */
+  .confetti-piece {
+    position: fixed; top: -20px; width: 10px; height: 10px;
+    border-radius: 2px; pointer-events: none; z-index: 999;
+    animation: confetti-fall linear forwards;
+  }
+
+  /* ---------- loading ---------- */
+  #loading {
+    min-height: 100vh; display: flex;
+    align-items: center; justify-content: center;
+    color: var(--inkSoft); font-size: 18px; font-family: var(--font);
+  }
+</style>
+</head>
+<body>
+
+<div id="loading">Carregando…</div>
+
+<div id="root" style="display:none">
+
+  <!-- HEADER -->
+  <div id="header">
+    <div id="logo-box">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="11" fill="#FFE0B8"/>
+        <circle cx="8.5" cy="11" r="1.4" fill="#102A52"/>
+        <circle cx="15.5" cy="11" r="1.4" fill="#102A52"/>
+        <path d="M8 15.5c1.3 1.6 6.7 1.6 8 0" stroke="#102A52" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M3 9c2-4 16-4 18 0" stroke="#173FA6" stroke-width="2.4" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div id="logo-text">
+      <div class="name">MATHEUS</div>
+      <div class="sub">HOME SCHOOL</div>
+    </div>
+    <button id="btn-parent" aria-label="Área dos pais">👪 Pais</button>
+  </div>
+
+  <!-- SCREEN: WELCOME -->
+  <div id="screen-welcome" class="screen anim-rise">
+    <div class="welcome-emoji">✖️</div>
+    <h1 class="welcome-title">Olá, Matheus! 👋</h1>
+    <p class="welcome-sub">Bora treinar a tabuada?</p>
+    <div id="stats-card">
+      <div class="stat-item">
+        <div class="stat-big" id="stat-stars">⭐ 0</div>
+        <div class="stat-label">estrelas</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-big" id="stat-level">Nível 2</div>
+        <div class="stat-label small" id="stat-level-label">Tabuadas do 1, 2, 5 e 10</div>
+      </div>
+    </div>
+    <button id="btn-start">Começar ▶</button>
+    <p class="welcome-hint">8 continhas por rodada</p>
+  </div>
+
+  <!-- SCREEN: PLAY -->
+  <div id="screen-play" class="screen hidden">
+    <div id="progress-bar-wrap">
+      <div id="progress-label">
+        <span id="progress-text">Continha 1 de 8</span>
+        <span id="progress-stars-line"></span>
+      </div>
+      <div id="progress-track"><div id="progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <div id="problem-area">
+      <div id="problem-expr">
+        <span id="prob-a">3</span>
+        <span class="mult"> × </span>
+        <span id="prob-b">4</span>
+      </div>
+      <div id="answer-bubble">?</div>
+      <div id="feedback-text"></div>
+    </div>
+
+    <div id="keypad">
+      <button class="key num" data-n="1">1</button>
+      <button class="key num" data-n="2">2</button>
+      <button class="key num" data-n="3">3</button>
+      <button class="key num" data-n="4">4</button>
+      <button class="key num" data-n="5">5</button>
+      <button class="key num" data-n="6">6</button>
+      <button class="key num" data-n="7">7</button>
+      <button class="key num" data-n="8">8</button>
+      <button class="key num" data-n="9">9</button>
+      <button class="key back" id="key-back" aria-label="Apagar">⌫</button>
+      <button class="key num" data-n="0">0</button>
+      <button class="key ok dim" id="key-ok" aria-label="Conferir">✓</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: DONE -->
+  <div id="screen-done" class="screen hidden anim-rise">
+    <div class="done-emoji" id="done-emoji">🏆</div>
+    <h1 class="done-title" id="done-title">Você arrasou! 🎉</h1>
+    <p class="done-score">Você acertou <b id="done-score-n">8</b> de <b>8</b></p>
+    <div class="done-stars" id="done-stars">⭐⭐⭐⭐⭐⭐⭐⭐</div>
+    <div id="level-badge" class="level-badge" style="display:none"></div>
+    <button id="btn-again">Jogar de novo ▶</button>
+    <button id="btn-home">Terminar por hoje</button>
+  </div>
+
+  <!-- SCREEN: PARENT (gate + dash) -->
+  <div id="screen-parent" class="screen hidden">
+    <!-- gate -->
+    <div id="parent-gate" class="anim-rise">
+      <h2>Área dos pais</h2>
+      <p>Para confirmar, quanto é <b id="gate-question">17 + 23</b>?</p>
+      <input id="gate-input" inputmode="numeric" pattern="[0-9]*" placeholder="Resposta" autocomplete="off">
+      <p class="gate-err" id="gate-err" style="display:none">Não foi dessa vez.</p>
+      <div class="gate-actions">
+        <button class="btn primary" id="btn-gate-enter">Entrar</button>
+        <button class="btn soft" id="btn-gate-back">Voltar</button>
+      </div>
+    </div>
+
+    <!-- dashboard (hidden until gate passes) -->
+    <div id="parent-dash" style="display:none">
+      <h2>Progresso do Matheus</h2>
+      <div class="tiles">
+        <div class="tile">
+          <div class="tile-label">Nível atual</div>
+          <div class="tile-value" id="d-level">2</div>
+          <div class="tile-sub"  id="d-level-sub">Tabuadas do 1, 2, 5 e 10</div>
+        </div>
+        <div class="tile">
+          <div class="tile-label">Acerto geral</div>
+          <div class="tile-value" id="d-acc">0%</div>
+          <div class="tile-sub"  id="d-acc-sub">0/0 respostas</div>
+        </div>
+        <div class="tile">
+          <div class="tile-label">Estrelas</div>
+          <div class="tile-value" id="d-stars">⭐ 0</div>
+        </div>
+        <div class="tile">
+          <div class="tile-label">Rodadas feitas</div>
+          <div class="tile-value" id="d-sessions">0</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Últimas rodadas</div>
+        <div id="chart"></div>
+      </div>
+
+      <div class="section" id="review-section" style="display:none">
+        <div class="section-title">Tabuadas para reforçar</div>
+        <div class="review-chips" id="review-chips"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Ajustar nível manualmente</div>
+        <div class="level-controls">
+          <button class="btn soft square" id="btn-lvl-down">−</button>
+          <div class="lv-label" id="d-lvl-ctrl">Nível 2</div>
+          <button class="btn primary square" id="btn-lvl-up">+</button>
+        </div>
+        <p class="level-hint">O nível também sobe e desce sozinho conforme o desempenho de cada rodada.</p>
+      </div>
+
+      <div class="parent-actions">
+        <button class="btn primary full" id="btn-dash-back">Voltar</button>
+        <button class="btn danger" id="btn-reset">Recomeçar</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- #root -->
+
+<script>
+"use strict";
+
+/* ===== constants ===== */
+const STORAGE_KEY = "mhs_mult_v1";
+const SESSION_LEN = 8;
+const LEVELS = {
+  1: [1,2,10],
+  2: [1,2,5,10],
+  3: [1,2,3,4,5,10],
+  4: [1,2,3,4,5,6,10],
+  5: [1,2,3,4,5,6,7,8,9,10]
+};
+const LEVEL_LABEL = {
+  1: "Tabuadas do 1, 2 e 10",
+  2: "Tabuadas do 1, 2, 5 e 10",
+  3: "Tabuadas do 1 ao 5 e 10",
+  4: "Tabuadas do 1 ao 6 e 10",
+  5: "Todas as tabuadas, até o 10"
+};
+const PRAISE = ["Muito bem!","Isso!","Mandou bem!","Boa, Matheus!","Perfeito!","Você é fera!"];
+const ENCOURAGE = "Quase! Olha de novo com calma 💪";
+
+/* ===== storage ===== */
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return { ...defaultData(), ...JSON.parse(raw) };
+  } catch(_) {}
+  return defaultData();
+}
+function saveData(d) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch(_) {}
+}
+function defaultData() {
+  return {
+    level: 2, stars: 0,
+    totalCorrect: 0, totalAttempts: 0,
+    sessionsDone: 0, factStats: {},
+    recentSessions: [], lastPlayed: null
+  };
+}
+
+/* ===== state ===== */
+let data, screen, problem, entry, idx, tries, feedback, sessionCorrect, sessionResults, leveling;
+let gateA, gateB;
+
+/* ===== helpers ===== */
+const rand = n => Math.floor(Math.random() * n);
+const factKey = (a,b) => a <= b ? `${a}x${b}` : `${b}x${a}`;
+
+function makeProblem(level, prevKey) {
+  const pool = LEVELS[level];
+  let a, b, key, guard = 0;
+  do {
+    a = pool[rand(pool.length)];
+    b = 1 + rand(10);
+    key = factKey(a, b);
+    guard++;
+  } while (prevKey && key === prevKey && guard < 8);
+  return { a, b, answer: a * b, key };
+}
+
+function recordFact(stats, key, ok) {
+  const cur = stats[key] || { right:0, wrong:0 };
+  return { ...stats, [key]: { right: cur.right + (ok?1:0), wrong: cur.wrong + (ok?0:1) } };
+}
+
+/* ===== DOM refs ===== */
+const $ = id => document.getElementById(id);
+
+/* ===== screen switching ===== */
+const SCREENS = ["welcome","play","done","parent"];
+function showScreen(name) {
+  screen = name;
+  SCREENS.forEach(s => {
+    const el = $("screen-" + s);
+    el.classList.toggle("hidden", s !== name);
+    if (s === name) {
+      el.classList.remove("anim-rise");
+      void el.offsetWidth;
+      el.classList.add("anim-rise");
+    }
+  });
+}
+
+/* ===== welcome ===== */
+function renderWelcome() {
+  $("stat-stars").textContent = "⭐ " + data.stars;
+  $("stat-level").textContent = "Nível " + data.level;
+  $("stat-level-label").textContent = LEVEL_LABEL[data.level];
+}
+
+/* ===== play ===== */
+function startSession() {
+  sessionCorrect = 0;
+  sessionResults = [];
+  idx = 0;
+  tries = 0;
+  entry = "";
+  feedback = null;
+  leveling = null;
+  problem = makeProblem(data.level, null);
+  showScreen("play");
+  renderPlay();
+}
+
+function renderPlay() {
+  const pct = (idx / SESSION_LEN) * 100;
+  $("progress-text").textContent = `Continha ${idx+1} de ${SESSION_LEN}`;
+  $("progress-stars-line").textContent = "⭐".repeat(idx);
+  $("progress-fill").style.width = pct + "%";
+
+  $("prob-a").textContent = problem.a;
+  $("prob-b").textContent = problem.b;
+
+  const bubble = $("answer-bubble");
+  bubble.className = ""; // clear classes
+
+  if (feedback && feedback.kind === "show") {
+    bubble.textContent = feedback.text;
+    bubble.classList.add("show");
+  } else if (entry === "") {
+    bubble.textContent = "?";
+  } else {
+    bubble.textContent = entry;
+  }
+
+  if (feedback) {
+    if (feedback.kind === "good") {
+      bubble.classList.add("good","anim-pop");
+      $("feedback-text").style.color = "var(--good)";
+      $("feedback-text").textContent = feedback.text + " ⭐";
+    } else if (feedback.kind === "bad") {
+      bubble.classList.add("bad","anim-shake");
+      $("feedback-text").style.color = "var(--warn)";
+      $("feedback-text").textContent = feedback.text;
+    } else {
+      // show
+      $("feedback-text").style.color = "var(--warn)";
+      $("feedback-text").textContent = feedback.text;
+    }
+  } else {
+    $("feedback-text").textContent = "";
+  }
+
+  const disabled = !!feedback;
+  document.querySelectorAll(".key").forEach(k => { k.disabled = disabled; });
+
+  const okBtn = $("key-ok");
+  if (entry !== "" && !disabled) {
+    okBtn.classList.remove("dim");
+  } else {
+    okBtn.classList.add("dim");
+  }
+}
+
+function tapDigit(d) {
+  if (feedback) return;
+  if (entry.length >= 3) return;
+  entry = entry === "0" ? d : entry + d;
+  renderPlay();
+}
+
+function tapBack() {
+  if (feedback) return;
+  entry = entry.slice(0, -1);
+  renderPlay();
+}
+
+function check() {
+  if (feedback || entry === "") return;
+  const val = parseInt(entry, 10);
+  const ok = val === problem.answer;
+
+  if (ok) {
+    const firstTry = tries === 0;
+    data = {
+      ...data,
+      stars: data.stars + (firstTry ? 1 : 0),
+      totalCorrect: data.totalCorrect + 1,
+      totalAttempts: data.totalAttempts + 1,
+      factStats: recordFact(data.factStats, problem.key, true)
+    };
+    saveData(data);
+    feedback = { kind:"good", text: PRAISE[rand(PRAISE.length)] };
+    renderPlay();
+    setTimeout(() => advance(firstTry), 950);
+  } else {
+    tries++;
+    data = {
+      ...data,
+      totalAttempts: data.totalAttempts + 1,
+      factStats: recordFact(data.factStats, problem.key, false)
+    };
+    saveData(data);
+
+    if (tries >= 2) {
+      feedback = { kind:"show", text: `${problem.a} × ${problem.b} = ${problem.answer}` };
+      renderPlay();
+      setTimeout(() => advance(false), 1700);
+    } else {
+      feedback = { kind:"bad", text: ENCOURAGE };
+      renderPlay();
+      setTimeout(() => {
+        entry = "";
+        feedback = null;
+        renderPlay();
+      }, 1100);
+    }
+  }
+}
+
+function advance(firstTry) {
+  const nextIdx = idx + 1;
+  sessionCorrect += firstTry ? 1 : 0;
+  sessionResults.push(firstTry);
+
+  if (nextIdx >= SESSION_LEN) {
+    finishSession();
+  } else {
+    idx = nextIdx;
+    tries = 0;
+    entry = "";
+    feedback = null;
+    problem = makeProblem(data.level, problem.key);
+    renderPlay();
+  }
+}
+
+function finishSession() {
+  let level = data.level;
+  let dir = null;
+  if (sessionCorrect >= 7 && level < 5) { level++; dir = "up"; }
+  else if (sessionCorrect <= 3 && level > 1) { level--; dir = "down"; }
+
+  const entryRec = {
+    date: new Date().toISOString(),
+    correct: sessionCorrect,
+    total: SESSION_LEN,
+    level: data.level
+  };
+  data = {
+    ...data,
+    level,
+    sessionsDone: data.sessionsDone + 1,
+    lastPlayed: entryRec.date,
+    recentSessions: [...data.recentSessions, entryRec].slice(-30)
+  };
+  saveData(data);
+  leveling = dir;
+  renderDone();
+  showScreen("done");
+  if (sessionCorrect >= 7) spawnConfetti();
+}
+
+/* ===== done ===== */
+function renderDone() {
+  const c = sessionCorrect;
+  const great = c >= 7;
+  $("done-emoji").textContent = great ? "🏆" : "🌟";
+  $("done-title").textContent = great
+    ? "Você arrasou! 🎉"
+    : c >= 5 ? "Muito bem! 👏"
+    : "Bom treino! Cada dia fica melhor 💙";
+  $("done-score-n").textContent = c;
+  $("done-stars").textContent = "⭐".repeat(c) + "☆".repeat(SESSION_LEN - c);
+
+  const badge = $("level-badge");
+  if (leveling === "up") {
+    badge.style.display = "";
+    badge.className = "level-badge up";
+    badge.textContent = `🚀 Subiu para o Nível ${data.level}! ${LEVEL_LABEL[data.level]}`;
+  } else if (leveling === "down") {
+    badge.style.display = "";
+    badge.className = "level-badge down";
+    badge.textContent = `Vamos treinar um pouquinho mais o Nível ${data.level}. Você consegue! 💪`;
+  } else {
+    badge.style.display = "none";
+  }
+}
+
+/* ===== confetti ===== */
+function spawnConfetti() {
+  const colors = ["#FFC23C","#5AB2FF","#16A06B","#FF8A5B","#1D4ED8","#FFE0B8"];
+  for (let i = 0; i < 60; i++) {
+    const el = document.createElement("div");
+    el.className = "confetti-piece";
+    el.style.left = rand(100) + "vw";
+    el.style.background = colors[rand(colors.length)];
+    el.style.width = (6 + rand(8)) + "px";
+    el.style.height = (6 + rand(8)) + "px";
+    el.style.animationDuration = (1.5 + rand(20)/10) + "s";
+    el.style.animationDelay = (rand(15)/10) + "s";
+    document.body.appendChild(el);
+    el.addEventListener("animationend", () => el.remove());
+  }
+}
+
+/* ===== parent area ===== */
+function openParent() {
+  gateA = 11 + rand(15);
+  gateB = 11 + rand(15);
+  $("gate-question").textContent = `${gateA} + ${gateB}`;
+  $("gate-input").value = "";
+  $("gate-input").classList.remove("err");
+  $("gate-err").style.display = "none";
+  $("parent-gate").style.display = "flex";
+  $("parent-dash").style.display = "none";
+  showScreen("parent");
+}
+
+function tryGate() {
+  const val = parseInt($("gate-input").value, 10);
+  if (val === gateA + gateB) {
+    $("parent-gate").style.display = "none";
+    renderDash();
+    $("parent-dash").style.display = "block";
+  } else {
+    $("gate-input").classList.add("err");
+    $("gate-err").style.display = "";
+  }
+}
+
+function renderDash() {
+  const acc = data.totalAttempts
+    ? Math.round((data.totalCorrect / data.totalAttempts) * 100)
+    : 0;
+
+  $("d-level").textContent = data.level;
+  $("d-level-sub").textContent = LEVEL_LABEL[data.level];
+  $("d-acc").textContent = acc + "%";
+  $("d-acc-sub").textContent = `${data.totalCorrect}/${data.totalAttempts} respostas`;
+  $("d-stars").textContent = "⭐ " + data.stars;
+  $("d-sessions").textContent = data.sessionsDone;
+  $("d-lvl-ctrl").textContent = "Nível " + data.level;
+
+  // chart
+  const recent = data.recentSessions.slice(-8);
+  const chart = $("chart");
+  chart.innerHTML = "";
+  if (recent.length === 0) {
+    chart.innerHTML = `<p style="color:var(--inkSoft);font-size:14px">Ainda sem rodadas registradas.</p>`;
+  } else {
+    recent.forEach(s => {
+      const col = document.createElement("div");
+      col.className = "chart-col";
+      const barColor = s.correct >= 7 ? "var(--good)" : s.correct >= 5 ? "var(--sky)" : "var(--warn)";
+      col.innerHTML = `
+        <div class="chart-bar-wrap">
+          <div class="chart-bar" style="height:${(s.correct/SESSION_LEN)*100}%;background:${barColor}"></div>
+        </div>
+        <div class="chart-num">${s.correct}</div>`;
+      chart.appendChild(col);
+    });
+  }
+
+  // review chips
+  const toReview = Object.entries(data.factStats)
+    .filter(([,v]) => v.wrong > 0)
+    .sort((a,b) => b[1].wrong - a[1].wrong)
+    .slice(0, 6);
+  const sec = $("review-section");
+  if (toReview.length > 0) {
+    sec.style.display = "";
+    $("review-chips").innerHTML = toReview.map(([k,v]) =>
+      `<span class="review-chip">${k.replace("x"," × ")} <small>(${v.wrong}✗)</small></span>`
+    ).join("");
+  } else {
+    sec.style.display = "none";
+  }
+}
+
+function setLevel(delta) {
+  const lvl = Math.min(5, Math.max(1, data.level + delta));
+  data = { ...data, level: lvl };
+  saveData(data);
+  renderDash();
+}
+
+function resetAll() {
+  if (confirm("Recomeçar do zero? Todo o progresso do Matheus será apagado.")) {
+    data = defaultData();
+    saveData(data);
+    showScreen("welcome");
+    renderWelcome();
+  }
+}
+
+/* ===== keyboard support ===== */
+document.addEventListener("keydown", e => {
+  if (screen !== "play") return;
+  if (e.key >= "0" && e.key <= "9") tapDigit(e.key);
+  else if (e.key === "Backspace") tapBack();
+  else if (e.key === "Enter") check();
+});
+
+/* ===== wire up events ===== */
+function init() {
+  data = loadData();
+
+  // show app
+  $("loading").style.display = "none";
+  $("root").style.display = "flex";
+  $("root").style.flexDirection = "column";
+
+  renderWelcome();
+  showScreen("welcome");
+
+  // header
+  $("btn-parent").addEventListener("click", openParent);
+
+  // welcome
+  $("btn-start").addEventListener("click", startSession);
+
+  // keypad
+  document.querySelectorAll(".key.num").forEach(btn => {
+    btn.addEventListener("click", () => tapDigit(btn.dataset.n));
+  });
+  $("key-back").addEventListener("click", tapBack);
+  $("key-ok").addEventListener("click", check);
+
+  // done
+  $("btn-again").addEventListener("click", startSession);
+  $("btn-home").addEventListener("click", () => { renderWelcome(); showScreen("welcome"); });
+
+  // parent gate
+  $("gate-input").addEventListener("input", () => {
+    $("gate-input").classList.remove("err");
+    $("gate-err").style.display = "none";
+    $("gate-input").value = $("gate-input").value.replace(/\D/g,"");
+  });
+  $("gate-input").addEventListener("keydown", e => { if (e.key === "Enter") tryGate(); });
+  $("btn-gate-enter").addEventListener("click", tryGate);
+  $("btn-gate-back").addEventListener("click", () => { renderWelcome(); showScreen("welcome"); });
+
+  // dash
+  $("btn-lvl-down").addEventListener("click", () => setLevel(-1));
+  $("btn-lvl-up").addEventListener("click",   () => setLevel(1));
+  $("btn-dash-back").addEventListener("click", () => { renderWelcome(); showScreen("welcome"); });
+  $("btn-reset").addEventListener("click", resetAll);
+}
+
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
