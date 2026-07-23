@@ -185,6 +185,45 @@ button:active{transform:scale(.96)}
 .cel-stars{font-size:32px;margin:6px 0 18px}
 #btn-cel-again{background:var(--brand);color:#fff;font-size:20px;font-weight:800;padding:16px 32px;border-radius:20px;box-shadow:0 6px 0 var(--brandDark);margin-bottom:10px;display:block;width:100%;max-width:300px}
 #btn-cel-home{background:transparent;color:var(--inkSoft);font-size:15px;font-weight:700;padding:10px;display:block}
+
+/* ── TUTOR MODULE ── */
+#s-tutor{gap:0}
+#tutor-topics-bar{display:flex;flex-wrap:wrap;gap:6px;padding:10px 0 8px;flex-shrink:0;align-items:center;min-height:40px;border-bottom:2px solid #E3ECFB;margin-bottom:4px}
+.topic-pill{background:#E8F0FE;color:var(--brandDark);font-size:13px;font-weight:700;border-radius:20px;padding:4px 10px}
+.no-topics-hint{font-size:13px;color:var(--inkSoft);font-style:italic}
+#chat-messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:10px 0 8px}
+.chat-bubble{max-width:86%;padding:12px 16px;border-radius:18px;font-size:16px;line-height:1.55}
+.chat-bubble.tutor{background:var(--white);border:2px solid #C5D8F8;color:var(--ink);align-self:flex-start;border-bottom-left-radius:4px;box-shadow:0 3px 10px rgba(21,101,192,.08)}
+.chat-bubble.matheus{background:var(--brand);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.bubble-name{font-size:11px;font-weight:800;color:var(--brandLight);margin-bottom:4px}
+.bubble-name-m{font-size:11px;font-weight:800;color:rgba(255,255,255,.7);margin-bottom:4px}
+.typing-dot{display:inline-flex;gap:5px;align-items:center;padding:4px 0}
+.typing-dot span{width:9px;height:9px;background:var(--brandLight);border-radius:50%;animation:tdot 1.2s infinite}
+.typing-dot span:nth-child(2){animation-delay:.2s}
+.typing-dot span:nth-child(3){animation-delay:.4s}
+@keyframes tdot{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-7px)}}
+#chat-input-area{display:flex;gap:8px;padding:10px 0 2px;flex-shrink:0;border-top:2px solid #E3ECFB;margin-top:auto}
+#chat-input{flex:1;border:2px solid #C5D8F8;border-radius:16px;padding:13px 16px;font-size:16px;font-family:var(--font);color:var(--ink);outline:none;background:var(--white)}
+#chat-input:focus{border-color:var(--brand)}
+#btn-send{background:var(--brand);color:#fff;border-radius:14px;width:52px;height:52px;font-size:22px;flex-shrink:0;box-shadow:0 3px 0 var(--brandDark);transition:opacity .15s}
+#btn-send:disabled{opacity:.45}
+/* ── TOPICS MGMT ── */
+#s-topics{gap:0}
+#topics-gate{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:12px}
+#topics-gate h2{font-size:22px;font-weight:800}
+#topics-dash{flex:1;overflow-y:auto;padding-bottom:16px}
+#topics-dash>h2{font-size:20px;font-weight:800;margin-bottom:6px}
+.topics-desc{color:var(--inkSoft);font-size:14px;margin-bottom:16px;line-height:1.5}
+.topic-input-row{display:flex;gap:8px;margin-bottom:16px}
+#topic-input{flex:1;border:2px solid #C5D8F8;border-radius:14px;padding:13px 16px;font-size:16px;font-family:var(--font);color:var(--ink);outline:none;background:var(--white)}
+#topic-input:focus{border-color:var(--brand)}
+#btn-add-topic{background:var(--brand);color:#fff;border-radius:14px;padding:13px 20px;font-size:22px;font-weight:800;box-shadow:0 3px 0 var(--brandDark)}
+.topic-list-ui{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.topic-item{display:flex;align-items:center;background:var(--white);border-radius:14px;padding:13px 16px;box-shadow:0 3px 10px rgba(21,101,192,.08);font-size:16px;font-weight:600;color:var(--ink);gap:10px}
+.topic-del{margin-left:auto;background:var(--warnSoft);color:var(--warn);border-radius:8px;padding:4px 12px;font-size:20px;font-weight:800;flex-shrink:0}
+.topic-empty{text-align:center;color:var(--inkSoft);font-size:15px;padding:24px 0;line-height:1.6}
+#tg-input{font-size:22px;text-align:center;padding:13px;border-radius:14px;border:2px solid #DCE7FB;max-width:190px;width:100%;outline:none;font-family:var(--font);color:var(--ink);background:var(--white)}
+
 </style>
 </head>
 <body>
@@ -214,6 +253,12 @@ button:active{transform:scale(.96)}
     </button>
     <button class="mod-card" onclick="launchModule('clock')">
       <span class="mod-icon">🕐</span>Que horas são?
+    </button>
+    <button class="mod-card" onclick="launchModule('tutor')" style="background:linear-gradient(135deg,#E8F0FE,#fff);border:2px solid #C5D8F8">
+      <span class="mod-icon">🤖</span>Tutor de IA
+    </button>
+    <button class="mod-card" onclick="launchModule('topics')" style="background:linear-gradient(135deg,#FFF8E1,#fff);border:2px solid #FFE082">
+      <span class="mod-icon">📋</span><span>Assuntos<br><small style="font-size:11px;color:var(--inkSoft);font-weight:600">pais / professores</small></span>
     </button>
   </div>
   <p id="home-footer">Matheus Home School · Learn · Play · Grow</p>
@@ -403,6 +448,51 @@ button:active{transform:scale(.96)}
   <button id="btn-cel-home" onclick="goHome()">Ir para o início</button>
 </div>
 
+
+<!-- ═══════════ TUTOR ═══════════ -->
+<div id="s-tutor" class="screen hidden">
+  <div id="tutor-topics-bar">
+    <span style="font-size:13px;font-weight:800;color:var(--inkSoft);margin-right:4px;flex-shrink:0">📚 Estudando:</span>
+    <span id="tutor-topics-content"></span>
+  </div>
+  <div id="chat-messages"></div>
+  <div id="chat-input-area">
+    <input id="chat-input" placeholder="Escreva sua dúvida aqui…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}" autocomplete="off">
+    <button id="btn-send" onclick="sendChat()">➤</button>
+  </div>
+</div>
+
+<!-- ═══════════ TOPICS MGMT ═══════════ -->
+<div id="s-topics" class="screen hidden">
+  <div id="topics-gate" class="anim-rise">
+    <div style="font-size:48px">🔐</div>
+    <h2>Assuntos da Escola</h2>
+    <p style="color:var(--inkSoft)">Área dos pais / professores.<br>Quanto é <b id="tg-question">17 + 23</b>?</p>
+    <input id="tg-input" inputmode="numeric" pattern="[0-9]*" placeholder="Resposta" autocomplete="off"
+      onkeydown="if(event.key==='Enter')tryTopicsGate()">
+    <p class="gate-err hidden" id="tg-err">Não foi dessa vez. Tente novamente.</p>
+    <div style="display:flex;gap:10px">
+      <button class="btn" onclick="tryTopicsGate()">Entrar</button>
+      <button class="btn soft" onclick="goHome()">Voltar</button>
+    </div>
+  </div>
+  <div id="topics-dash" class="hidden">
+    <h2>📋 Assuntos da Escola</h2>
+    <p class="topics-desc">Adicione os tópicos que o Matheus está estudando esta semana.<br>
+    O <b>Tutor de IA</b> vai usar essa lista para ajudá-lo de forma personalizada! 🤖</p>
+    <div class="topic-input-row">
+      <input id="topic-input" placeholder="Ex: Frações, Animais vertebrados, Past tense…"
+        autocomplete="off" onkeydown="if(event.key==='Enter')addTopic()">
+      <button id="btn-add-topic" onclick="addTopic()">+</button>
+    </div>
+    <div class="topic-list-ui" id="topic-list-ui"></div>
+    <div style="display:flex;gap:10px;margin-top:4px">
+      <button class="btn full" onclick="goHome()">Salvar e Voltar</button>
+      <button class="btn danger" onclick="clearTopics()">Limpar tudo</button>
+    </div>
+  </div>
+</div>
+
 </div><!-- #app -->
 
 <script>
@@ -500,7 +590,7 @@ const rand = n => Math.floor(Math.random() * n);
 const pad2 = n => String(n).padStart(2,"0");
 
 function showOnly(...ids) {
-  ["s-home","s-reading","s-math","s-clock","s-mult","s-celebration"].forEach(id => {
+  ["s-home","s-reading","s-math","s-clock","s-mult","s-celebration","s-tutor","s-topics"].forEach(id => {
     $(id).classList.toggle("hidden", !ids.includes(id));
   });
 }
@@ -554,6 +644,8 @@ function launchModule(mod) {
   if (mod === "addition")    { initMath("+"); return; }
   if (mod === "subtraction") { initMath("-"); return; }
   if (mod === "clock")       { initClock(); return; }
+  if (mod === "tutor")       { initTutor(); return; }
+  if (mod === "topics")      { initTopics(); return; }
 }
 
 // ══════════════════════════════════════════════
@@ -1049,6 +1141,115 @@ document.addEventListener("DOMContentLoaded", () => {
   showOnly("s-home");
   hideHeader();
 });
+
+// ══════════════════════════════════════════════
+//  TOPICS
+// ══════════════════════════════════════════════
+const TOPICS_KEY = "mhs_topics_v1";
+function loadTopics(){ try{const r=localStorage.getItem(TOPICS_KEY);return r?JSON.parse(r):[]}catch(_){return[]} }
+function saveTopics(t){ try{localStorage.setItem(TOPICS_KEY,JSON.stringify(t))}catch(_){} }
+
+let tgA, tgB;
+function initTopics(){
+  tgA=11+rand(15); tgB=11+rand(15);
+  $("tg-question").textContent=tgA+" + "+tgB;
+  $("tg-input").value="";
+  $("tg-input").style.borderColor="#DCE7FB";
+  $("tg-err").classList.add("hidden");
+  $("topics-gate").classList.remove("hidden");
+  $("topics-dash").classList.add("hidden");
+  showOnly("s-topics");
+  setHeader("📋 Assuntos da Escola",0);
+}
+function tryTopicsGate(){
+  const val=parseInt($("tg-input").value,10);
+  if(val===tgA+tgB){
+    $("topics-gate").classList.add("hidden");
+    renderTopicsDash();
+    $("topics-dash").classList.remove("hidden");
+  } else {
+    $("tg-input").style.borderColor="var(--warn)";
+    $("tg-err").classList.remove("hidden");
+  }
+}
+function renderTopicsDash(){
+  const topics=loadTopics();
+  $("topic-list-ui").innerHTML=topics.length
+    ? topics.map((t,i)=>'<div class="topic-item">📌 '+t+'<button class="topic-del" onclick="removeTopic('+i+')">×</button></div>').join("")
+    : '<div class="topic-empty">Nenhum assunto ainda.<br>Adicione os tópicos que o Matheus está estudando! ✏️</div>';
+}
+function addTopic(){
+  const inp=$("topic-input"); const v=inp.value.trim(); if(!v)return;
+  const t=loadTopics(); t.push(v); saveTopics(t); inp.value=""; renderTopicsDash();
+}
+function removeTopic(i){ const t=loadTopics(); t.splice(i,1); saveTopics(t); renderTopicsDash(); }
+function clearTopics(){ if(confirm("Limpar todos os assuntos?")){ saveTopics([]); renderTopicsDash(); } }
+
+// ══════════════════════════════════════════════
+//  AI TUTOR
+// ══════════════════════════════════════════════
+let tutorMessages = [];
+
+function initTutor(){
+  tutorMessages=[];
+  showOnly("s-tutor");
+  setHeader("🤖 Tutor de IA",0);
+  const topics=loadTopics();
+  $("tutor-topics-content").innerHTML=topics.length
+    ? topics.map(t=>'<span class="topic-pill">'+t+'</span>').join(" ")
+    : '<span class="no-topics-hint">Perguntas gerais — adicione tópicos em 📋</span>';
+  $("chat-messages").innerHTML="";
+  const g=topics.length
+    ? "Olá, Matheus! 👋<br>Estou aqui para te ajudar com: <b>"+topics.join(", ")+"</b>.<br><br>Qual é a sua dúvida hoje? 😊"
+    : "Olá, Matheus! 👋 Sou seu Tutor de IA!<br>Pode me perguntar qualquer coisa que está estudando na escola.<br>Por onde vamos começar? 😊";
+  addBubble("tutor",g);
+  setTimeout(()=>{ const inp=$("chat-input"); if(inp) inp.focus(); },200);
+}
+
+function addBubble(role,html){
+  const msgs=$("chat-messages");
+  const d=document.createElement("div");
+  d.className="chat-bubble "+role;
+  d.innerHTML=role==="tutor"
+    ? '<div class="bubble-name">🤖 Tutor</div>'+html
+    : '<div class="bubble-name-m">Matheus</div>'+html;
+  msgs.appendChild(d);
+  msgs.scrollTop=msgs.scrollHeight;
+  return d;
+}
+
+async function sendChat(){
+  const inp=$("chat-input");
+  const text=inp.value.trim();
+  if(!text||$("btn-send").disabled)return;
+  inp.value="";
+  $("btn-send").disabled=true;
+  addBubble("matheus",text);
+  tutorMessages.push({role:"user",content:text});
+  if(tutorMessages.length>20) tutorMessages=tutorMessages.slice(-20);
+  const typing=addBubble("tutor",'<div class="typing-dot"><span></span><span></span><span></span></div>');
+  try{
+    const resp=await fetch("/api/chat",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({messages:tutorMessages,topics:loadTopics()})
+    });
+    const data=await resp.json();
+    typing.remove();
+    if(data.content){
+      tutorMessages.push({role:"assistant",content:data.content});
+      addBubble("tutor",data.content.replace(/\n/g,"<br>"));
+    } else {
+      addBubble("tutor","Ops! Algo deu errado. Tenta de novo! 😅");
+    }
+  }catch(e){
+    typing.remove();
+    addBubble("tutor","Sem conexão com a internet. Verifica o Wi-Fi e tenta novamente! 🌐");
+  }
+  $("btn-send").disabled=false;
+  inp.focus();
+}
+
 </script>
 </body>
 </html>
